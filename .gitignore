@@ -1,0 +1,7 @@
+.hg/
+.hg*
+*.pyc
+pubsub.egg-info/
+dist/
+__pycache__/
+tests/__pycache__/
