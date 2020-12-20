@@ -1,17 +1,21 @@
 # pubsub
 
-Simple publish & subscribe communication pattern written in pure Python.
+Simple publish & subscribe communication pattern written in pure Python (object designed).
 
 Messages can be posted by one ore more publishers on channels and subscribers can get those messages.
 
 Can be used in a threaded project to communicate asynchronously
 with light-weight process running in different threads.
+(see test case tests/test_pubsub_load.py for example)
+
 It allows complet separation of parts of a model–view–controller software.
 In that case there are no direct method calls between parts.
 Message are exchanged asynchronously on communication channels and processed when subscribers are available.
 
-This class is based on thread-safe Python standard FIFO (First In First Out) queue implementation and was designed thread-safe by Zhen Wang.
-Compatible with python 2 and 3.
+This class PubSub is based on thread-safe Python standard FIFO (First In First Out) queue implementation and was designed thread-safe by Zhen Wang.
+Compatible with python >= 3.6 only.
+
+New in v0.4 : implement PubSubPriority class to register messages with priorities
 
 - Original author: Zhen Wang
 - [https://github.com/nehz/pubsub] : Original project location
@@ -29,16 +33,23 @@ Usage
     communicator = pubsub.PubSub()
     messageQueue = communicator.subscribe('test')
     communicator.publish('test', 'Hello World !')
-    print(next(communicator.listen(messageQueue))['data'])
+    print(next(messageQueue.listen())['data'])
 
 Hello World !
 
     communicator.unsubscribe('test', messageQueue)
 
-For more information on usage, see test case file source : test_PubSub.py
+For more information on usage, see test case file sources : in tests subdirectory
 
 Changelog
 ==========
+* v0.4 :
+    * just warn when queue overflows when publishing in a channel
+    * implement PubSubPriority to register messages with priorities
+    * only support Python >= 3.6 but not Python 2
+    * improve quality metrics
+    * remove listen method in main PubSub communicator class, use ChanelQueue*.listen() instead.
+    * replace functool.partial use by ChanelQueue* class
 * 0.3:
    * Improved explanation of parameter max_queue_in_a_channel with comments.
    * Addition of a new test case with listeners and senders working in threads.
@@ -61,12 +72,11 @@ Changelog
 
 Pre-Requisites
 ============
-- [x] python3 or python2:  [https://www.python.org/downloads] : Download python
-- [x] six : [http://six.readthedocs.io] : Six: Python 2 and 3 Compatibility Library
+- [x] python3.6 :  [https://www.python.org/downloads] : Download python
 - [ ] pytest : [https://docs.pytest.org/en/latest/contents.html] : for running unit tests
 - [ ] pylint : [https://www.pylint.org] : A quality tool developed by Logilab.
-- [ ] flex8 : [https://www.pylint.org] : The modular source code checker: pep8, pyflakes and co.
-
+- [ ] flake8 : [https://flake8.pycqa.org/en/latest] : Tool For Style Guide Enforcement, McCabe complexity.
+- [ ] coverage : [https://coverage.readthedocs.io/en/coverage-5.3.1] : a tool for measuring code coverage of Python programs
 
 The MIT License
 ===============
